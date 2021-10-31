@@ -19,7 +19,7 @@ namespace ACT_Plugin
         private string _settingsFile = Path.Combine(ActGlobals.oFormActMain.AppDataFolder.FullName, "Config\\WrathMath.config.xml");
         private SettingsSerializer _xmlSettings;
 
-        private FrmSettings _frmSettings = null;
+        private WrathMathSettingsForm _frmSettings = null;
 
         public int WindowLocationX = 0;
         public int WindowLocationY = 0;
@@ -48,7 +48,7 @@ namespace ACT_Plugin
             _xmlSettings.AddStringSetting("MacroFile");
             _xmlSettings.AddStringSetting("MacroCommands");
 
-            _frmSettings = new FrmSettings(this);
+            _frmSettings = new WrathMathSettingsForm(this);
         }
 
         public void EditSettings()
