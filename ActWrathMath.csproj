@@ -47,46 +47,55 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="WrathMathHelpForm.cs">
+    <Compile Include="UI\WrathMathHelpForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="WrathMathHelpForm.Designer.cs">
+    <Compile Include="UI\WrathMathHelpForm.Designer.cs">
       <DependentUpon>WrathMathHelpForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="WrathMathSettingsForm.cs">
+    <Compile Include="UI\WrathMathPluginTab.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\WrathMathPluginTab.Designer.cs">
+      <DependentUpon>WrathMathPluginTab.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\WrathMathSettingsForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="WrathMathSettingsForm.Designer.cs">
+    <Compile Include="UI\WrathMathSettingsForm.Designer.cs">
       <DependentUpon>WrathMathSettingsForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WrathMathMain.cs" />
     <Compile Include="WrathMathDet.cs" />
-    <Compile Include="WrathMathHelpControl.cs">
+    <Compile Include="UI\WrathMathHelpControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="WrathMathHelpControl.Designer.cs">
+    <Compile Include="UI\WrathMathHelpControl.Designer.cs">
       <DependentUpon>WrathMathHelpControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="WrathMathHudForm.cs">
+    <Compile Include="UI\WrathMathHudForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="WrathMathHudForm.Designer.cs">
+    <Compile Include="UI\WrathMathHudForm.Designer.cs">
       <DependentUpon>WrathMathHudForm.cs</DependentUpon>
     </Compile>
     <Compile Include="WrathMathSettings.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="WrathMathHelpForm.resx">
+    <EmbeddedResource Include="UI\WrathMathHelpForm.resx">
       <DependentUpon>WrathMathHelpForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="WrathMathSettingsForm.resx">
+    <EmbeddedResource Include="UI\WrathMathPluginTab.resx">
+      <DependentUpon>WrathMathPluginTab.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\WrathMathSettingsForm.resx">
       <DependentUpon>WrathMathSettingsForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="WrathMathHelpControl.resx">
+    <EmbeddedResource Include="UI\WrathMathHelpControl.resx">
       <DependentUpon>WrathMathHelpControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="WrathMathHudForm.resx">
+    <EmbeddedResource Include="UI\WrathMathHudForm.resx">
       <DependentUpon>WrathMathHudForm.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>

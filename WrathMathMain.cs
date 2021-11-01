@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Drawing;
 using System.Linq;
 using System.Media;
 using System.Windows.Forms;
+using ACT_Plugin.UI;
 using Advanced_Combat_Tracker;
 
 namespace ACT_Plugin
@@ -117,13 +119,13 @@ namespace ACT_Plugin
         {
             _lblPluginPage = pluginStatusText;
             _lblPluginPage.Text = "Plugin Started";
-            var webHelp = new WrathMathHelpControl()
+            var tabUI = new WrathMathPluginTab(this)
             {
                 Dock = DockStyle.Fill
             };
             _tabPluginPage = pluginScreenSpace;
             _tabPluginPage.Controls.Clear();
-            _tabPluginPage.Controls.Add(webHelp);
+            _tabPluginPage.Controls.Add(tabUI);
 
             _settings.LoadSettings();
 
@@ -136,6 +138,14 @@ namespace ACT_Plugin
 
             ActGlobals.oFormActMain.OnLogLineRead += OFormActMain_OnLogLineRead;
             ActGlobals.oFormActMain.OnCombatStart += OFormActMain_OnCombatStart;
+        }
+
+        public void MoveHudTo(Rectangle bounds)
+        {
+            _hud.Width = Math.Max(400, _hud.Width);
+            _hud.Height = Math.Max(600, _hud.Height);
+            _hud.Left = bounds.X + ((bounds.Width - _hud.Width) / 2);
+            _hud.Top = bounds.Y + ((bounds.Height - _hud.Height) / 2);
         }
 
         private void hud_FormClosing(object sender, FormClosingEventArgs e)
