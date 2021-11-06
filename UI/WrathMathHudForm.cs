@@ -6,7 +6,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.Timers;
 using System.Windows.Forms;
 using System.Reflection;
 
@@ -17,11 +17,18 @@ namespace ACT_Plugin
 {
     public partial class WrathMathHudForm : Form
     {
+        private class DetCombo
+        {
+            public WrathMathDet First;
+            public WrathMathDet Second;
+        }
+
         private WrathMathSettings _settings = null;
         private List<WrathMathDet> _playerDets = new List<WrathMathDet>();
         private WrathMathDet _mobDet = null;
         private bool _started = false;
         private bool _matched = false;
+        private System.Timers.Timer _timerProgress = null;
 
         public WrathMathHudForm(WrathMathSettings settings)
         {
@@ -34,6 +41,14 @@ namespace ACT_Plugin
         {
             var version = Assembly.GetExecutingAssembly().GetName().Version;
             this.Text = $"ACT Wrath Math v{version.Major}.{version.Minor}.{version.Build}{(WrathMathMain.DEBUG ? " - [DEBUG]" : "")}";
+
+            lblNext.Visible = false;
+            progressRound.Visible = false;
+        }
+
+        private void WrathMathHudForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            StopProgressTimer();
         }
 
         private void btnHelp_Click(object sender, EventArgs e)
@@ -52,15 +67,68 @@ namespace ACT_Plugin
             Reset();
         }
 
+        private void StartProgressTimer()
+        {
+            if (_timerProgress == null)
+            {
+                _timerProgress = new System.Timers.Timer(1000);
+                _timerProgress.AutoReset = true;
+                _timerProgress.Elapsed += timerProgress_Elapsed;
+                _timerProgress.Start();
+            }
+        }
+
+        private void StopProgressTimer()
+        {
+            if (_timerProgress != null)
+            {
+                _timerProgress.Elapsed -= timerProgress_Elapsed;
+                _timerProgress.Stop();
+                _timerProgress.Dispose();
+                _timerProgress = null;
+            }
+        }
+
+        private void timerProgress_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            AdvanceProgress();
+        }
+
+        private void AdvanceProgress()
+        {
+            if (this.InvokeRequired)
+            {
+                Action safeUpdate = delegate { AdvanceProgress(); };
+                this.Invoke(safeUpdate);
+            }
+            else
+            {
+                progressRound.PerformStep();
+                if (progressRound.Value == progressRound.Maximum)
+                {
+                    lblNext.Text = $"Next due anytime";
+                }
+                else
+                {
+                    lblNext.Text = $"Next in about { Math.Max(0, progressRound.Maximum - progressRound.Value) }s";
+                }
+                progressRound.Visible = true;
+                lblNext.Visible = true;
+            }
+        }
+
         public void Reset()
         {
+            StopProgressTimer();
+            progressRound.Value = 0;
+
             _playerDets.Clear();
             _started = false;
             _mobDet = null;
             _matched = false;
             RefreshCombos();
 
-            // Clear the old macro file so that someone cannot prematurely execute the previous one
+            // Clear the old macro file so that someone cannot prematurely execute from the last round
             if (_settings.CreateMacro && !string.IsNullOrEmpty(_settings.MacroFile))
             {
                 File.WriteAllText(_settings.MacroFile, "");
@@ -71,6 +139,12 @@ namespace ACT_Plugin
         {
             Reset();
             _started = true;
+        }
+
+        public void EndRound()
+        {
+            progressRound.Value = 0;
+            StartProgressTimer();
         }
 
         public void AddDet(WrathMathDet mathDet)
@@ -159,12 +233,6 @@ namespace ACT_Plugin
             {
                 CollectCombos(dets.Skip(1).Take(99999).ToArray(), combos);
             }
-        }
-
-        private class DetCombo
-        {
-            public WrathMathDet First;
-            public WrathMathDet Second;
         }
     }
 }

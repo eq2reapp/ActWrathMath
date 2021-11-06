@@ -109,9 +109,10 @@ namespace ACT_Plugin
         {
             ActGlobals.oFormActMain.OnLogLineRead -= OFormActMain_OnLogLineRead;
             ActGlobals.oFormActMain.OnCombatStart -= OFormActMain_OnCombatStart;
-            _hud.FormClosing -= hud_FormClosing;
 
             _hud.Close();
+            _hud.FormClosing -= hud_FormClosing;
+
             _lblPluginPage.Text = "Plugin Stopped";
         }
 
@@ -133,8 +134,8 @@ namespace ACT_Plugin
             _hud.FormClosing += hud_FormClosing;
             _hud.Show(ActGlobals.oFormActMain);
             _hud.SetDesktopLocation(_settings.WindowLocationX, _settings.WindowLocationY);
-            _hud.Width = _settings.WindowWidth > 0 ? _settings.WindowWidth : 200;
-            _hud.Height = _settings.WindowHeight > 0 ? _settings.WindowHeight : 200;
+            _hud.Width = Math.Max(200, _settings.WindowWidth);
+            _hud.Height = Math.Max(400, _settings.WindowHeight);
 
             ActGlobals.oFormActMain.OnLogLineRead += OFormActMain_OnLogLineRead;
             ActGlobals.oFormActMain.OnCombatStart += OFormActMain_OnCombatStart;
@@ -180,6 +181,11 @@ namespace ACT_Plugin
                     if (logInfo.logLine.Contains("The combined increments of the first two removals"))
                     {
                         _hud.StartRound();
+                    }
+                    // Check for end of a round - this will let us start a timer for the next one
+                    else if (logInfo.logLine.Contains("Wrath of the Math has been successfully"))
+                    {
+                        _hud.EndRound();
                     }
                     else
                     {
