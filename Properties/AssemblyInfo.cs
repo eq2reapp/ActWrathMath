@@ -1,18 +1,14 @@
 ﻿using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("ActWrathMath")]
+[assembly: AssemblyTitle("Wrath Math")]
 [assembly: AssemblyDescription("Select the ActWrathMath.dll tab above for more information. You can reopen the popup window by closing and reopening ACT, or toggling the Enabled checkbox for this plugin.")]
-[assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Skyfire.Reapp")]
-[assembly: AssemblyProduct("ActWrathMath")]
+[assembly: AssemblyProduct("Wrath Math")]
 [assembly: AssemblyCopyright("Copyright ©  2021")]
-[assembly: AssemblyTrademark("")]
-[assembly: AssemblyCulture("")]
 
 // Setting ComVisible to false makes the types in this assembly not visible
 // to COM components.  If you need to access a type in this assembly from

@@ -1,17 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Media;
+using System.Reflection;
 using System.Text;
 using System.Timers;
 using System.Windows.Forms;
-using System.Reflection;
-
 using Advanced_Combat_Tracker;
-using System.Media;
 
 namespace ACT_Plugin
 {
