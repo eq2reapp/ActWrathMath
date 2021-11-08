@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Drawing;
+using System.IO;
 using System.Linq;
-using System.Media;
+using System.Reflection;
+using System.Threading;
 using System.Windows.Forms;
-using ACT_Plugin.UI;
 using Advanced_Combat_Tracker;
+using ACT_Plugin.UI;
 
 namespace ACT_Plugin
 {
@@ -19,6 +21,7 @@ namespace ACT_Plugin
         public static bool DEBUG = false;
 #endif
 
+        public static int PLUGIN_ID = int.MaxValue;
         public static string HELP_TEXT = @"
 <html>
 <head>
@@ -93,7 +96,7 @@ namespace ACT_Plugin
     <h2>Help!</h2>
     <p>Send an in-game tell to Skyfire.Reapp, or on Discord (samo#7395) and I'll try to help out if I can!</p>
     <p>
-        If you find a bug or have a suggestion to improve the plugin, creat an issue on 
+        If you find a bug or have a suggestion to improve the plugin, create an issue on
         <a href=""https://github.com/eq2reapp/ActWrathMath/issues"">Github</a>.
     </p>
 </body>
@@ -107,6 +110,8 @@ namespace ACT_Plugin
 
         void IActPluginV1.DeInitPlugin()
         {
+            ActGlobals.oFormActMain.UpdateCheckClicked -= OFormActMain_UpdateCheckClicked;
+
             ActGlobals.oFormActMain.OnLogLineRead -= OFormActMain_OnLogLineRead;
             ActGlobals.oFormActMain.OnCombatStart -= OFormActMain_OnCombatStart;
 
@@ -139,6 +144,51 @@ namespace ACT_Plugin
 
             ActGlobals.oFormActMain.OnLogLineRead += OFormActMain_OnLogLineRead;
             ActGlobals.oFormActMain.OnCombatStart += OFormActMain_OnCombatStart;
+
+            // Update pattern for file download
+            // See: https://gist.github.com/EQAditu/4d6e3a1945fed2199f235fedc1e3ec56#Act_Plugin_Update.cs
+            ActGlobals.oFormActMain.UpdateCheckClicked += OFormActMain_UpdateCheckClicked;
+            if (ActGlobals.oFormActMain.GetAutomaticUpdatesAllowed())
+            {
+                new Thread(new ThreadStart(OFormActMain_UpdateCheckClicked)) { IsBackground = true }.Start();
+            }
+        }
+
+        private void OFormActMain_UpdateCheckClicked()
+        {
+            if (!DEBUG) return;
+
+            // This ID must be the same ID used on ACT's website.
+            int pluginId = PLUGIN_ID;
+            string pluginName = Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyTitleAttribute>().Title;
+            try
+            {
+                Version localVersion = GetType().Assembly.GetName().Version;
+                Version remoteVersion = new Version(ActGlobals.oFormActMain.PluginGetRemoteVersion(pluginId).TrimStart(new char[] { 'v' }));
+                if (remoteVersion > localVersion)
+                {
+                    DialogResult result = MessageBox.Show(
+                        $"There is an updated version of the {pluginName} plugin.  Update it now?\n\n(If there is an update to ACT, you should click No and update ACT first.)",
+                        "New Version", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                    if (result == DialogResult.Yes)
+                    {
+                        FileInfo updatedFile = ActGlobals.oFormActMain.PluginDownload(pluginId);
+                        ActPluginData pluginData = ActGlobals.oFormActMain.PluginGetSelfData(this);
+                        pluginData.pluginFile.Delete();
+                        updatedFile.MoveTo(pluginData.pluginFile.FullName);
+
+                        // You can choose to simply restart the plugin, if the plugin can properly clean-up in DeInit
+                        // and has no external assemblies that update.
+                        ThreadInvokes.CheckboxSetChecked(ActGlobals.oFormActMain, pluginData.cbEnabled, false);
+                        Application.DoEvents();
+                        ThreadInvokes.CheckboxSetChecked(ActGlobals.oFormActMain, pluginData.cbEnabled, true);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ActGlobals.oFormActMain.WriteExceptionLog(ex, $"Plugin Update Check - {pluginName}");
+            }
         }
 
         public void MoveHudTo(Rectangle bounds)

@@ -1,13 +1,9 @@
-﻿using Advanced_Combat_Tracker;
-using System;
-using System.Collections.Generic;
-using System.Drawing;
+﻿using System;
 using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
+using Advanced_Combat_Tracker;
 
 namespace ACT_Plugin
 {
