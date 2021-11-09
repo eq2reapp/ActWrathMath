@@ -156,6 +156,7 @@ namespace ACT_Plugin
 
         private void OFormActMain_UpdateCheckClicked()
         {
+            // Once Aditu has provided a plugin ID, we can test this
             if (!DEBUG) return;
 
             // This ID must be the same ID used on ACT's website.
@@ -211,40 +212,33 @@ namespace ACT_Plugin
 
         private void OFormActMain_OnCombatStart(bool isImport, CombatToggleEventArgs encounterInfo)
         {
-            // On any new encounter, clear the detected state. This allows us to at least shorten the
+            // On any new encounter, reset the detected state. This allows us to at least shorten the
             // parse time during the intended zone.
-            _zoneDetected = false;
+            _zoneDetected = ActGlobals.oFormActMain.CurrentZone == "Vasty Deep: Toil and Trouble [Heroic II]";
         }
 
         private void OFormActMain_OnLogLineRead(bool isImport, LogLineEventArgs logInfo)
         {
             // Try to parse only when necessary
-            if (DEBUG || (!isImport && logInfo.inCombat))
+            if (DEBUG || (!isImport && logInfo.inCombat && _zoneDetected))
             {
-                if (!_zoneDetected)
+                // Check for beginning of a round - this will let us clear the list for easy scanning
+                if (logInfo.logLine.Contains("The combined increments of the first two removals"))
                 {
-                    _zoneDetected = (logInfo.detectedZone == "Vasty Deep: Toil and Trouble [Heroic II]");
+                    _hud.StartRound();
                 }
-                if (DEBUG || _zoneDetected)
+                // Check for end of a round - this will let us start a timer for the next one
+                else if (logInfo.logLine.Contains("Wrath of the Math has been successfully"))
                 {
-                    // Check for beginning of a round - this will let us clear the list for easy scanning
-                    if (logInfo.logLine.Contains("The combined increments of the first two removals"))
+                    _hud.EndRound();
+                }
+                else
+                {
+                    // Check for player dets, and add them collectively. The HUD will handle any extra logic.
+                    var det = GetDetFromChatMessage(logInfo.logLine);
+                    if (det != null)
                     {
-                        _hud.StartRound();
-                    }
-                    // Check for end of a round - this will let us start a timer for the next one
-                    else if (logInfo.logLine.Contains("Wrath of the Math has been successfully"))
-                    {
-                        _hud.EndRound();
-                    }
-                    else
-                    {
-                        // Check for player dets, and add them collectively. The HUD will handle any extra logic.
-                        var det = GetDetFromChatMessage(logInfo.logLine);
-                        if (det != null)
-                        {
-                            _hud.AddDet(det);
-                        }
+                        _hud.AddDet(det);
                     }
                 }
             }

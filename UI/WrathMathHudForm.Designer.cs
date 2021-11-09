@@ -32,7 +32,6 @@ namespace ACT_Plugin
             this.txtResults = new System.Windows.Forms.TextBox();
             this.btnHelp = new System.Windows.Forms.Button();
             this.btnSettings = new System.Windows.Forms.Button();
-            this.btnReset = new System.Windows.Forms.Button();
             this.progressRound = new System.Windows.Forms.ProgressBar();
             this.lblNext = new System.Windows.Forms.Label();
             this.SuspendLayout();
@@ -73,16 +72,6 @@ namespace ACT_Plugin
             this.btnSettings.UseVisualStyleBackColor = true;
             this.btnSettings.Click += new System.EventHandler(this.btnSettings_Click);
             // 
-            // btnReset
-            // 
-            this.btnReset.Location = new System.Drawing.Point(200, 9);
-            this.btnReset.Name = "btnReset";
-            this.btnReset.Size = new System.Drawing.Size(92, 23);
-            this.btnReset.TabIndex = 2;
-            this.btnReset.Text = "Reset";
-            this.btnReset.UseVisualStyleBackColor = true;
-            this.btnReset.Click += new System.EventHandler(this.btnReset_Click);
-            // 
             // progressRound
             // 
             this.progressRound.Location = new System.Drawing.Point(8, 38);
@@ -109,7 +98,6 @@ namespace ACT_Plugin
             this.ControlBox = false;
             this.Controls.Add(this.lblNext);
             this.Controls.Add(this.progressRound);
-            this.Controls.Add(this.btnReset);
             this.Controls.Add(this.btnSettings);
             this.Controls.Add(this.btnHelp);
             this.Controls.Add(this.txtResults);
@@ -133,7 +121,6 @@ namespace ACT_Plugin
         private System.Windows.Forms.TextBox txtResults;
         private System.Windows.Forms.Button btnHelp;
         private System.Windows.Forms.Button btnSettings;
-        private System.Windows.Forms.Button btnReset;
         private System.Windows.Forms.ProgressBar progressRound;
         private System.Windows.Forms.Label lblNext;
     }

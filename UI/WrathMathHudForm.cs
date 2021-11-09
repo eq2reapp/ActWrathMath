@@ -59,11 +59,6 @@ namespace ACT_Plugin
             _settings.EditSettings();
         }
 
-        private void btnReset_Click(object sender, EventArgs e)
-        {
-            Reset();
-        }
-
         private void StartProgressTimer()
         {
             if (_timerProgress == null)
