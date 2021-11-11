@@ -21,7 +21,7 @@ namespace ACT_Plugin
         public static bool DEBUG = false;
 #endif
 
-        public static int PLUGIN_ID = int.MaxValue;
+        public static int PLUGIN_ID = 85;
         public static string HELP_TEXT = @"
 <html>
 <head>
@@ -156,9 +156,6 @@ namespace ACT_Plugin
 
         private void OFormActMain_UpdateCheckClicked()
         {
-            // Once Aditu has provided a plugin ID, we can test this
-            if (!DEBUG) return;
-
             // This ID must be the same ID used on ACT's website.
             int pluginId = PLUGIN_ID;
             string pluginName = Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyTitleAttribute>().Title;
